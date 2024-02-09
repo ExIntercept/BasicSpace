@@ -1,0 +1,2 @@
+email = "replace_me_with_email"
+password = "replace_me_with_password"
