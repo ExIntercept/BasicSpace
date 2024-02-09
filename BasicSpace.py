@@ -80,7 +80,6 @@ def booking_choice():
     except FileNotFoundError:
         print(f"File {file_path} not found.")
         return None
-<<<<<<< HEAD
     
 
 #uncomment when you get IDs
@@ -118,8 +117,6 @@ def booking_choice():
 	except Exception as e:
 		print("An error occurred in booking():", str(e))"""
 
-=======
->>>>>>> 6fc800446211df7fb81c180f442488af6d516189
 
 def main():
     browser = initialize_browser()
