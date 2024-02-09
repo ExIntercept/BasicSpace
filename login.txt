@@ -1,2 +1,2 @@
-email = "aryansrivastava100"
-password = "Aryan@Spacebasic@084168"
+email = "replace_me_with_email"
+password = "replace_me_with_password"
