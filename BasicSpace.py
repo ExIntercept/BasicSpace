@@ -11,7 +11,7 @@ import os
 
 def initialize_browser():
     options = webdriver.ChromeOptions()
-    # Uncomment the following line to make Chrome run in the background.
+    #This makes chrome run in the background:
     # options.add_argument('--headless')
     options.binary_location = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
     browser = webdriver.Chrome(options=options)
