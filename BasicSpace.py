@@ -8,10 +8,13 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 import os
+import hashlib
+import socket
+
+whitelist = ["aryansrivastava100@gmail.com", "karthikchess2005@gmail.com"]
 
 def initialize_browser():
     options = webdriver.ChromeOptions()
-    #This makes chrome run in the background:
     # options.add_argument('--headless')
     options.binary_location = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
     browser = webdriver.Chrome(options=options)
@@ -24,17 +27,22 @@ def wait_for_login_time(target_time):
     if time_diff > 0:
         time.sleep(time_diff)
 
-def login(browser):
-    try:
-        with open("login.txt", "r") as file:
+def getCredentials():
+    with open("login.txt", "r") as file:
             lines = file.readlines()
             for line in lines:
                 if "email" in line:
                     email = line.split("=")[1].strip().strip('"')
                 elif "password" in line:
                     password = line.split("=")[1].strip().strip('"')
-        
-        target_time = datetime(datetime.now().year, datetime.now().month, datetime.now().day, 17, 00)  # 5:00 PM
+    return [email, password]
+
+
+def login(browser, userCredList):
+    try:
+        email = userCredList[0]
+        password = userCredList[1]
+        target_time = datetime(datetime.now().year, datetime.now().month, datetime.now().day, 16, 35)  # 5:00 PM
         wait_for_login_time(target_time)
         
         browser.get("https://portal.spacebasic.com/login")
@@ -118,10 +126,11 @@ def booking_choice():
 		print("An error occurred in booking():", str(e))"""
 
 
-def main():
+
+def main(userCredList):
     browser = initialize_browser()
     try:
-        login(browser)
+        login(browser, userCredList)
         choice_list = booking_choice()
         print(choice_list)
         #booking(browser, choice_list)
@@ -132,4 +141,22 @@ def main():
         browser.quit()
 
 if __name__ == "__main__":
-    main()
+    userCredList = getCredentials()
+    if userCredList[0] in whitelist:
+        main(userCredList)
+    else: 
+        print("User not in whitelist.")
+    userAuth = input("Enter admin auth key to continue: ")
+    SERVER_ADDRESS = ('localhost', 12345)
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client_socket.connect(SERVER_ADDRESS)
+    client_socket.sendall(b'generatePassword')
+    data = client_socket.recv(1024)
+    a = data.decode()
+    if userAuth == a:
+        print(f"One time access granted.")
+        main(userCredList)
+    else:
+        print("wrong password")
+        
+    client_socket.close()
